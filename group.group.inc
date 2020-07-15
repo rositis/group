@@ -10,7 +10,7 @@
 function group_group_permission() {
   $combo_warning = '<br />' . t('Enabling multiple means of joining a group may result in a weird user experience');
 
-  $permissions = array(
+  return array(
     'administer group' => array(
       'title' => t('Administer group'),
       'description' => t('Administer the group, its content and members'),
@@ -71,8 +71,6 @@ function group_group_permission() {
       'title' => t('View group'),
     ),
   );
-
-  return $permissions;
 }
 
 /**
@@ -126,7 +124,7 @@ function group_group_operation_links(Group $group) {
   $operations = array();
 
   // Retrieve the destination url.
-  $destination = drupal_get_destination();
+  $destination = backdrop_get_destination();
 
   // Add an 'edit' link if available.
   if (group_access('update', $group)) {
@@ -224,7 +222,7 @@ function group_group_member_operation_links(GroupMembership $group_membership) {
   $operations = array();
 
   // Retrieve the destination url.
-  $destination = drupal_get_destination();
+  $destination = backdrop_get_destination();
 
   // Load the group the member belongs to.
   $group = group_load($group_membership->gid);
@@ -401,7 +399,7 @@ function group_user_can_join(Group $group, $account, $group_membership) {
  */
 function group_user_join(Group $group, $account) {
   $group->addMember($account->uid, array('joined_on' => REQUEST_TIME));
-  drupal_set_message(t('You have joined the group.'));
+  backdrop_set_message(t('You have joined the group.'));
 }
 
 /**
@@ -430,7 +428,7 @@ function group_user_can_join_form(Group $group, $account, $group_membership) {
  *   The user that wants to join.
  */
 function group_user_join_form(Group $group, $account) {
-  drupal_goto("group/$group->gid/member/$account->uid/join");
+  backdrop_goto("group/$group->gid/member/$account->uid/join");
 }
 
 /**
@@ -460,7 +458,7 @@ function group_user_can_request_membership(Group $group, $account, $group_member
  */
 function group_user_request_membership(Group $group, $account) {
   $group->addMember($account->uid, array('status' => 'requested', 'requested_on' => REQUEST_TIME));
-  drupal_set_message(t('You have requested to join the group.'));
+  backdrop_set_message(t('You have requested to join the group.'));
 }
 
 /**
@@ -489,7 +487,7 @@ function group_user_can_request_membership_form(Group $group, $account, $group_m
  *   The user that wants to join.
  */
 function group_user_request_membership_form(Group $group, $account) {
-  drupal_goto("group/$group->gid/member/$account->uid/request");
+  backdrop_goto("group/$group->gid/member/$account->uid/request");
 }
 
 /**
@@ -521,5 +519,5 @@ function group_user_can_leave(Group $group, $account, $group_membership) {
  */
 function group_user_leave(Group $group, $account, GroupMembership $group_membership) {
   $group_membership->delete();
-  drupal_set_message(t('You have left the group.'));
+  backdrop_set_message(t('You have left the group.'));
 }

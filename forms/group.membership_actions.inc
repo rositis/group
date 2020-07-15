@@ -9,6 +9,13 @@
 
 /**
  * Generate the membership actions form for a group.
+ *
+ * @param $form
+ * @param $form_state
+ * @param \Group $group
+ * @param $account
+ *
+ * @return mixed
  */
 function group_membership_actions_form($form, &$form_state, Group $group, $account) {
   // Make sure this file is available throughout the entire form lifetime.

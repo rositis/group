@@ -430,4 +430,32 @@ class Group extends Entity {
   public function userHasPermission($uid, $permission) {
     return $uid == 1 || in_array($permission, $this->userPermissions($uid));
   }
+
+  /**
+   * @return mixed
+   */
+  public function id() {
+    // TODO: Implement id() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function entityType() {
+    // TODO: Implement entityType() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function label() {
+    // TODO: Implement label() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function uri() {
+    // TODO: Implement uri() method.
+  }
 }

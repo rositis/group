@@ -343,6 +343,6 @@ function group_multiple_delete_confirm_submit($form, &$form_state) {
 
     group_delete_multiple($gids);
     watchdog('groups', 'Deleted @count groups.', array('@count' => $count));
-    drupal_set_message(format_plural($count, 'Deleted 1 group.', 'Deleted @count groups.'));
+    backdrop_set_message(format_plural($count, 'Deleted 1 group.', 'Deleted @count groups.'));
   }
 }

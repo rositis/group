@@ -10,6 +10,12 @@
  * Builds the group member overview form.
  *
  * @todo Dynamic pager amount.
+ *
+ * @param $form
+ * @param $form_state
+ * @param \Group $group
+ *
+ * @return mixed
  */
 function group_member_overview_form($form, &$form_state, Group $group) {
   // If the form was rebuilt from an operation, we show that form instead.
@@ -25,7 +31,13 @@ function group_member_overview_form($form, &$form_state, Group $group) {
   $form['filters'] = group_member_filters_form($group);
   $form['options'] = group_member_options_form($group);
   $form['members'] = group_members_form($group, 20);
-  $form['pager'] = array('#markup' => theme('pager'));
+  try {
+    $form['pager'] = array('#markup' => theme('pager'));
+  }
+  catch (Exception $e) {
+    watchdog_exception('Group', $e);
+  }
+
 
   return $form;
 }
@@ -115,6 +127,9 @@ function group_member_filters_form() {
 
 /**
  * Filter form submit callback.
+ *
+ * @param $form
+ * @param $form_state
  */
 function group_member_filters_form_submit($form, &$form_state) {
   $filters = module_invoke_all('group_member_filters');
@@ -148,6 +163,10 @@ function group_member_filters_form_submit($form, &$form_state) {
 
 /**
  * Builds the group member administration options.
+ *
+ * @param \Group $group
+ *
+ * @return array
  */
 function group_member_options_form(Group $group) {
   $fs_options = array(
@@ -201,6 +220,9 @@ function group_member_options_form_validate($form, &$form_state) {
 
 /**
  * Options form submit callback.
+ *
+ * @param $form
+ * @param $form_state
  */
 function group_member_options_form_submit($form, &$form_state) {
   $operations = module_invoke_all('group_member_operations', $form_state['build_info']['args'][0]);

@@ -5,6 +5,42 @@
  */
 
 /**
+ * implements hook_autoload_info().
+ */
+function group_autoload_info() {
+  return array(
+    'Group' => 'includes/group.inc',
+    'GroupController' => 'includes/group.controller.inc'
+  );
+}
+
+/* TODO: More
+files[] = classes/group.ui_controller.inc
+files[] = classes/group.extra_fields_controller.inc
+files[] = classes/group.views_controller.inc
+files[] = classes/group_membership.inc
+files[] = classes/group_membership.controller.inc
+files[] = classes/group_membership.ui_controller.inc
+files[] = classes/group_membership.extra_fields_controller.inc
+files[] = classes/group_membership.views_controller.inc
+files[] = classes/group_role.inc
+files[] = classes/group_role.controller.inc
+files[] = classes/group_role.ui_controller.inc
+files[] = classes/group_role.features_controller.inc
+files[] = classes/group_type.inc
+files[] = classes/group_type.controller.inc
+files[] = classes/group_type.ui_controller.inc
+files[] = classes/group_type.features_controller.inc
+
+files[] = views/handlers/group_handler_field_child_entity_count.inc
+files[] = views/handlers/group_handler_field_membership_role.inc
+files[] = views/handlers/group_handler_filter_membership_role.inc
+files[] = views/handlers/group_handler_relationship_child_entity.inc
+files[] = views/handlers/group_handler_relationship_membership_role.inc
+files[] = views/handlers/group_handler_relationship_parent_group.inc
+*/
+
+/**
  * Define bit flags to limit group permissions with.
  *
  * @see hook_group_permission()
@@ -139,10 +175,11 @@ function group_permission() {
  * Implements hook_form_FORM_ID_alter().
  */
 function group_form_system_themes_admin_form_alter(&$form, &$form_state) {
+  $config = config('group.settings');
   $form['admin_theme']['group_admin_theme'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating groups'),
-    '#default_value' => variable_get('group_admin_theme', '0'),
+    '#default_value' => $config->get('group_admin_theme'),
   );
 
   $form['#submit'][] = 'group_system_themes_admin_form_submit';
@@ -150,16 +187,22 @@ function group_form_system_themes_admin_form_alter(&$form, &$form_state) {
 
 /**
  * Extra submit handler for admin theme form.
+ *\
+ * @param $form
+ * @param $form_state
  */
 function group_system_themes_admin_form_submit($form, &$form_state) {
-  variable_set('group_admin_theme', $form_state['values']['group_admin_theme']);
+  $config = config('group.settings');
+  $config->set('group_admin_theme', $form_state['values']['group_admin_theme']);
 }
 
 /**
  * Implements hook_admin_paths().
  */
 function group_admin_paths() {
-  if (variable_get('group_admin_theme')) {
+  $config = config('group.settings');
+  $paths = [];
+  if ($config->get('group_admin_theme')) {
     $paths = array(
       'group/*/edit' => TRUE,
       'group/*/delete' => TRUE,
@@ -168,9 +211,8 @@ function group_admin_paths() {
       'group/add' => TRUE,
       'group/add/*' => TRUE,
     );
-
-    return $paths;
   }
+  return $paths;
 }
 
 /**
